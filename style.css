@@ -151,6 +151,8 @@ strong{color:var(--ink)}
 .field input:focus+span,.field input:not(:placeholder-shown)+span,.field textarea:focus+span,.field textarea:not(:placeholder-shown)+span{transform:translateY(-.6rem) scale(.78);color:var(--gold)}
 .field.err input,.field.err textarea{border-color:#e5584f}
 .form .btn{justify-self:start}
+.form .btn:disabled{opacity:.6;cursor:wait}
+.note a{text-decoration:underline}
 .note{min-height:1.4rem;font-size:.92rem;color:var(--gold-l)}
 
 /* FOOTER */

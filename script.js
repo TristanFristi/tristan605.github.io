@@ -99,9 +99,10 @@
     if (d.open) $$('.faq details').forEach(o => o !== d && (o.open = false));
   }));
 
-  // Contact form → opens the visitor's e-mail app with the message prefilled
-  const form = $('#form'), note = $('#note');
-  form.addEventListener('submit', e => {
+  // Contact form → sent straight to the company's inbox through FormSubmit (no mail app needed)
+  const MAIL_TO = 'info@sportprijzensalland.nl';
+  const form = $('#form'), note = $('#note'), submitBtn = $('button[type=submit]', form);
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     let ok = true;
     $$('[required]', form).forEach(i => {
@@ -110,11 +111,30 @@
       if (bad) ok = false;
     });
     if (!ok) { note.textContent = 'Vul alsjeblieft naam, een geldig e-mailadres en je bericht in.'; return; }
+
     const f = Object.fromEntries(new FormData(form));
-    const body = `${f.bericht}\n\n— ${f.naam}\nE-mail: ${f.email}${f.telefoon ? '\nTelefoon: ' + f.telefoon : ''}`;
-    const subject = f.onderwerp || 'Bericht via de website';
-    location.href = `mailto:info@sportprijzensalland.nl?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    note.textContent = 'Je e-mailprogramma is geopend – druk daar op verzenden. Lukt dat niet? Bel of app ons gerust.';
+    if (f._honey) return; // spam trap: real visitors never fill this in
+    submitBtn.disabled = true;
+    note.textContent = 'Bericht wordt verstuurd…';
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${MAIL_TO}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          Naam: f.naam, 'E-mail': f.email, Telefoon: f.telefoon || '-', Bericht: f.bericht,
+          _subject: f.onderwerp ? `Website: ${f.onderwerp}` : 'Nieuw bericht via de website',
+          _replyto: f.email, _template: 'table', _captcha: 'false'
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || data.success === 'false') throw new Error(data.message || res.status);
+      form.reset();
+      note.textContent = 'Bedankt! Je bericht is verstuurd. We nemen zo snel mogelijk contact met je op.';
+    } catch {
+      note.innerHTML = `Versturen is niet gelukt. Bel <a href="tel:+31612029129">06-12029129</a> of mail naar <a href="mailto:${MAIL_TO}">${MAIL_TO}</a>.`;
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
   $$('.field input, .field textarea').forEach(i => i.addEventListener('input', () => i.parentElement.classList.remove('err')));
 })();
