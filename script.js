@@ -5,12 +5,13 @@
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   // Nav, progress bar, floating button
-  const nav = $('#nav'), bar = $('#progress'), fab = $('.fab');
+  const nav = $('#nav'), bar = $('#progress'), fab = $('.fab'), contact = $('#contact');
   const onScroll = () => {
     const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
     nav.classList.toggle('scrolled', y > 40);
     bar.style.width = (y / h * 100) + '%';
-    fab.classList.toggle('show', y > innerHeight * .8);
+    // Floating message button: only after the hero, and not once the contact form itself is in view
+    fab.classList.toggle('show', y > innerHeight * .8 && contact.getBoundingClientRect().top > innerHeight * .6);
     if (!reduce) $('#heroBg').style.translate = `0 ${Math.min(y, innerHeight) * .18}px`;
   };
   addEventListener('scroll', onScroll, { passive: true });
@@ -28,7 +29,7 @@
   // Scroll reveal
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-  }), { threshold: .15, rootMargin: '0px 0px -6% 0px' });
+  }), { threshold: .05, rootMargin: '0px 0px 12% 0px' });
   $$('.reveal, .photo-stack, .steps li').forEach(el => io.observe(el));
 
   if (fine && !reduce) {
@@ -104,13 +105,18 @@
   const form = $('#form'), note = $('#note'), submitBtn = $('button[type=submit]', form);
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    let ok = true;
+    let firstBad = null;
     $$('[required]', form).forEach(i => {
       const bad = !i.value.trim() || (i.type === 'email' && !/^\S+@\S+\.\S+$/.test(i.value));
       i.parentElement.classList.toggle('err', bad);
-      if (bad) ok = false;
+      if (bad && !firstBad) firstBad = i;
     });
-    if (!ok) { note.textContent = 'Vul alsjeblieft naam, een geldig e-mailadres en je bericht in.'; return; }
+    if (firstBad) {
+      note.textContent = 'Vul alsjeblieft naam, een geldig e-mailadres en je bericht in.';
+      firstBad.focus({ preventScroll: true });
+      firstBad.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      return;
+    }
 
     const f = Object.fromEntries(new FormData(form));
     if (f._honey) return; // spam trap: real visitors never fill this in
@@ -132,7 +138,7 @@
       note.textContent = 'Bedankt! Je bericht is verstuurd. We nemen zo snel mogelijk contact met je op.';
     } catch (err) {
       console.error('Formulier versturen mislukt:', err);
-      note.innerHTML = `Versturen is niet gelukt (${String(err.message || err).replace(/</g, '&lt;')}). Bel <a href="tel:+31612029129">06-12029129</a> of mail naar <a href="mailto:${MAIL_TO}">${MAIL_TO}</a>.`;
+      note.innerHTML = `Versturen is niet gelukt. Bel <a href="tel:+31612029129">06-12029129</a> of mail naar <a href="mailto:${MAIL_TO}">${MAIL_TO}</a>.`;
     } finally {
       submitBtn.disabled = false;
     }
