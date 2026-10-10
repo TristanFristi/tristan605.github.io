@@ -130,8 +130,9 @@
       if (!res.ok || data.success === 'false') throw new Error(data.message || res.status);
       form.reset();
       note.textContent = 'Bedankt! Je bericht is verstuurd. We nemen zo snel mogelijk contact met je op.';
-    } catch {
-      note.innerHTML = `Versturen is niet gelukt. Bel <a href="tel:+31612029129">06-12029129</a> of mail naar <a href="mailto:${MAIL_TO}">${MAIL_TO}</a>.`;
+    } catch (err) {
+      console.error('Formulier versturen mislukt:', err);
+      note.innerHTML = `Versturen is niet gelukt (${String(err.message || err).replace(/</g, '&lt;')}). Bel <a href="tel:+31612029129">06-12029129</a> of mail naar <a href="mailto:${MAIL_TO}">${MAIL_TO}</a>.`;
     } finally {
       submitBtn.disabled = false;
     }
