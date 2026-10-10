@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Beheer galerij | Sportprijzen Salland</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0d0b">
+<!-- The token never leaves this browser except to api.github.com; the CSP below enforces that. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' blob: data: https://impro.usercontent.one; connect-src https://api.github.com; base-uri 'none'; form-action 'none'">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="beheer.css">
+</head>
+<body class="admin">
+
+<header class="a-bar">
+  <a href="./" class="brand" aria-label="Naar de website">
+    <img src="https://impro.usercontent.one/appid/hostnetWsb/domain/sportprijzensalland.nl/media/sportprijzensalland.nl/onewebmedia/logo.png?etag=null&sourceContentType=image%2Fpng&ignoreAspectRatio&resize=573%2B180" alt="Sportprijzen Salland" width="150" height="47">
+  </a>
+  <a href="./" class="btn btn-ghost btn-sm">&larr; Naar de website</a>
+</header>
+
+<main class="a-wrap">
+  <p class="kicker">Beheer</p>
+  <h1>Galerij beheren</h1>
+  <p class="a-lead">Voeg foto's toe aan de galerij op de website, of haal ze weg. Alleen de beheerder met een geldig toegangstoken kan dit.</p>
+
+  <!-- INLOGGEN -->
+  <section class="a-card" id="loginCard">
+    <h2>Inloggen</h2>
+    <form id="loginForm" novalidate>
+      <label class="field">
+        <input id="token" type="password" autocomplete="off" spellcheck="false" placeholder=" " required>
+        <span>Toegangstoken van GitHub</span>
+      </label>
+      <label class="check"><input type="checkbox" id="remember"> Onthoud mij op dit apparaat</label>
+      <button class="btn btn-gold" type="submit" id="loginBtn">Inloggen</button>
+      <p class="a-note" id="loginNote" role="status"></p>
+    </form>
+
+    <details class="a-help">
+      <summary>Hoe maak ik zo'n token aan?</summary>
+      <ol>
+        <li>Log in op <b>github.com</b> met het account dat eigenaar is van deze website.</li>
+        <li>Ga naar <b>Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens</b> en kies <b>Generate new token</b>.</li>
+        <li>Geef het een naam (bijv. <i>Galerij</i>) en kies een vervaldatum.</li>
+        <li>Kies bij <b>Repository access</b> &rarr; <b>Only select repositories</b> en selecteer <b>tristan605.github.io</b>.</li>
+        <li>Zet bij <b>Permissions &rarr; Repository permissions</b> de optie <b>Contents</b> op <b>Read and write</b>.</li>
+        <li>Klik op <b>Generate token</b>, kopieer de code (begint met <code>github_pat_</code>) en plak hem hierboven.</li>
+      </ol>
+      <p>Deel het token met niemand. Wordt het gelekt? Verwijder het dan bij GitHub; het werkt meteen niet meer.</p>
+    </details>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="dash" hidden>
+    <div class="a-status">
+      <span>Ingelogd als <b id="who"></b></span>
+      <button class="btn btn-ghost btn-sm" type="button" id="logout">Uitloggen</button>
+    </div>
+
+    <section class="a-card">
+      <h2>Foto's toevoegen</h2>
+      <label class="drop" id="drop">
+        <input type="file" id="files" accept="image/jpeg,image/png,image/webp" multiple class="sr">
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+        <strong>Kies foto's of sleep ze hierheen</strong>
+        <small>JPG, PNG of WebP &middot; worden automatisch verkleind &middot; max. 20 tegelijk</small>
+      </label>
+      <ul class="pending" id="pending"></ul>
+      <div class="a-actions">
+        <button class="btn btn-gold" type="button" id="uploadBtn" disabled>Uploaden</button>
+        <button class="btn btn-ghost" type="button" id="clearBtn" hidden>Lijst leegmaken</button>
+      </div>
+      <p class="a-note" id="uploadNote" role="status"></p>
+    </section>
+
+    <section class="a-card">
+      <h2>Foto's in de galerij <span class="count" id="count"></span></h2>
+      <div class="a-grid" id="current"></div>
+      <p class="a-note" id="currentNote" role="status"></p>
+    </section>
+  </div>
+</main>
+
+<script src="beheer.js"></script>
+</body>
+</html>

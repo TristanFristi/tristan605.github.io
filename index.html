@@ -25,6 +25,7 @@
   <nav class="links" id="links" aria-label="Hoofdmenu">
     <a href="#over">Over</a>
     <a href="#assortiment">Assortiment</a>
+    <a href="#galerij" hidden>Galerij</a>
     <a href="#catalogus">Catalogus</a>
     <a href="#faq">FAQ</a>
     <a href="#contact" class="btn btn-gold btn-sm">Stuur een bericht</a>
@@ -135,8 +136,21 @@
   </div>
 </section>
 
+<!-- GALERIJ (verborgen zolang er geen foto's zijn; beheer via beheer.html) -->
+<section class="section dark" id="galerij" hidden>
+  <div class="wrap">
+    <div class="head reveal">
+      <p class="kicker">Galerij</p>
+      <h2>Prijzen in beeld</h2>
+      <p class="sub">Een kijkje bij onze bekers, medailles en trofeeën.</p>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="g-more"><button type="button" class="btn btn-ghost" id="galleryMore" hidden>Meer foto's tonen</button></div>
+  </div>
+</section>
+
 <!-- CATALOGUS -->
-<section class="section dark" id="catalogus">
+<section class="section" id="catalogus">
   <div class="wrap">
     <div class="head reveal">
       <p class="kicker">Catalogus 2026</p>
@@ -161,7 +175,7 @@
 </section>
 
 <!-- FAQ -->
-<section class="section" id="faq">
+<section class="section dark" id="faq">
   <div class="wrap narrow">
     <div class="head reveal">
       <p class="kicker">FAQ</p>
@@ -220,6 +234,7 @@
     <img src="https://impro.usercontent.one/appid/hostnetWsb/domain/sportprijzensalland.nl/media/sportprijzensalland.nl/onewebmedia/logo.png?etag=null&sourceContentType=image%2Fpng&ignoreAspectRatio&resize=579%2B182" alt="Sportprijzen Salland" width="170" height="53" loading="lazy">
     <p class="slogan">Ontdek onze prijzen van trots!</p>
     <p class="addr">Bezoekadres op afspraak · Barkstraat 2c, 8102 GV Raalte<br><a href="mailto:info@sportprijzensalland.nl">info@sportprijzensalland.nl</a> · <a href="tel:+31612029129">06-12029129</a></p>
+    <a class="admin-link" href="beheer.html" rel="nofollow">Beheer</a>
   </div>
 </footer>
 
@@ -227,6 +242,19 @@
   <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.700 7L3 21l2-5.300A8 8 0 1121 12z"/></svg>
 </a>
 
+<dialog id="lightbox" aria-label="Foto vergroot">
+  <div class="lb-stage">
+    <button type="button" class="lb-btn lb-close" aria-label="Sluiten">&times;</button>
+    <button type="button" class="lb-btn lb-prev" aria-label="Vorige foto">&#8249;</button>
+    <figure class="lb-fig">
+      <img alt="">
+      <figcaption><span class="lb-cap"></span><span class="lb-count"></span></figcaption>
+    </figure>
+    <button type="button" class="lb-btn lb-next" aria-label="Volgende foto">&#8250;</button>
+  </div>
+</dialog>
+
 <script src="script.js"></script>
+<script src="gallery.js"></script>
 </body>
 </html>
