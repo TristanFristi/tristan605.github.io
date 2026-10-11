@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /beheer.html
+
+Sitemap: https://raaltesportprijzen.nl/sitemap.xml
